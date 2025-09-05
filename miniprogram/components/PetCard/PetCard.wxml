@@ -1,0 +1,60 @@
+<!--components/PetCard/PetCard.wxml-->
+<view class="pet-card {{compact ? 'compact' : ''}}" bindtap="onCardTap">
+  <!-- 宠物头像 -->
+  <view class="pet-avatar-container">
+    <block wx:if="{{pet.avatar}}">
+      <image 
+        class="pet-avatar" 
+        src="{{pet.avatar}}" 
+        mode="aspectFill"
+      />
+    </block>
+    <block wx:else>
+      <view class="pet-avatar placeholder">
+        <text class="placeholder-icon">🐾</text>
+      </view>
+    </block>
+    <view class="pet-species-badge">
+      <text class="species-text">{{getPetTypeText(pet.species)}}</text>
+    </view>
+  </view>
+
+  <!-- 宠物信息 -->
+  <view class="pet-info">
+    <view class="pet-name-row">
+      <text class="pet-name">{{pet.name}}</text>
+      <text class="pet-gender">{{getGenderText(pet.gender)}}</text>
+    </view>
+    
+    <view class="pet-details">
+      <text class="pet-breed">{{pet.breed || '未知品种'}}</text>
+      <text class="pet-age">{{age}}</text>
+    </view>
+    
+    <view wx:if="{{pet.weightKg}}" class="pet-weight">
+      <text class="weight-text">体重: {{pet.weightKg}}kg</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view wx:if="{{showActions}}" class="pet-actions">
+    <view class="action-btn secondary" bindtap="onEditTap" catch:tap="true">
+      <text class="action-text">编辑</text>
+    </view>
+    <view class="action-btn primary" bindtap="onDetailTap" catch:tap="true">
+      <text class="action-text">详情</text>
+    </view>
+  </view>
+
+  <!-- 健康状态指示器 -->
+  <view class="health-indicators">
+    <view class="indicator vaccine {{vaccineStatus}}">
+      <text class="indicator-icon">💉</text>
+      <text class="indicator-text">疫苗</text>
+    </view>
+    <view class="indicator deworm {{dewormStatus}}">
+      <text class="indicator-icon">🪱</text>
+      <text class="indicator-text">驱虫</text>
+    </view>
+  </view>
+</view>

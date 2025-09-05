@@ -1,0 +1,94 @@
+<!--pages/knowledge-detail/knowledge-detail.wxml-->
+<view class="container">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner">
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+
+  <!-- 文章内容 -->
+  <view wx:else class="article-container">
+    <!-- 文章头部 -->
+    <view class="article-header">
+      <view class="article-meta">
+        <view class="category-badge">
+          <text class="category-icon">{{getCategoryIcon(article.category)}}</text>
+          <text class="category-text">{{getCategoryLabel(article.category)}}</text>
+        </view>
+        <text class="article-date">{{formatDate(article.updatedAt)}}</text>
+      </view>
+      
+      <text class="article-title">{{article.title}}</text>
+      
+      <view class="article-info">
+        <text class="reading-time">📖 {{getReadingTime(article.contentMD)}}分钟阅读</text>
+        <text class="word-count">{{getWordCount(article.contentMD)}}字</text>
+      </view>
+    </view>
+
+    <!-- 文章正文 -->
+    <view class="article-content">
+      <rich-text nodes="{{renderedContent}}" />
+    </view>
+
+    <!-- 文章底部 -->
+    <view class="article-footer">
+      <view class="footer-actions">
+        <button class="action-btn secondary" bindtap="onShare">
+          <text class="btn-icon">📤</text>
+          <text class="btn-text">分享</text>
+        </button>
+        <button class="action-btn secondary" bindtap="onCollect">
+          <text class="btn-icon">{{isCollected ? '❤️' : '🤍'}}</text>
+          <text class="btn-text">{{isCollected ? '已收藏' : '收藏'}}</text>
+        </button>
+        <button class="action-btn primary" bindtap="onFeedback">
+          <text class="btn-icon">💬</text>
+          <text class="btn-text">反馈</text>
+        </button>
+      </view>
+      
+      <view class="copyright">
+        <text class="copyright-text">本内容仅供参考，具体情况请咨询专业兽医</text>
+      </view>
+    </view>
+
+    <!-- 相关推荐 -->
+    <view wx:if="{{relatedArticles.length > 0}}" class="related-section">
+      <view class="section-header">
+        <text class="section-title">相关推荐</text>
+      </view>
+      
+      <view class="related-list">
+        <view 
+          wx:for="{{relatedArticles}}" 
+          wx:key="_id"
+          class="related-item"
+          bindtap="onRelatedArticle"
+          data-article="{{item}}"
+        >
+          <view class="related-icon">
+            <text class="icon-emoji">{{getCategoryIcon(item.category)}}</text>
+          </view>
+          <view class="related-content">
+            <text class="related-title">{{item.title}}</text>
+            <text class="related-summary">{{getArticleSummary(item.contentMD)}}</text>
+          </view>
+          <view class="related-arrow">></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 浮动操作按钮 -->
+  <view class="floating-actions">
+    <view class="floating-btn" bindtap="onScrollToTop">
+      <text class="floating-icon">⬆️</text>
+    </view>
+  </view>
+</view>
+
+
+
+

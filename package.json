@@ -1,0 +1,49 @@
+{
+  "name": "mypet-miniprogram",
+  "version": "1.0.0",
+  "description": "宠物疫苗/驱虫提醒微信小程序",
+  "main": "app.js",
+  "scripts": {
+    "dev": "npm run build:watch",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "lint": "eslint miniprogram/**/*.ts --fix",
+    "format": "prettier --write \"miniprogram/**/*.{ts,js,json,wxml,wxss}\"",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "miniprogram",
+    "typescript",
+    "pet",
+    "vaccine",
+    "reminder"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/wechat-miniprogram": "^3.4.8",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.0",
+    "miniprogram-api-typings": "^3.12.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,wxml,wxss}": [
+      "prettier --write"
+    ]
+  }
+}
+
+
+
+

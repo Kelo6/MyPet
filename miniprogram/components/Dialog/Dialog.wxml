@@ -1,0 +1,23 @@
+<!-- components/Dialog/Dialog.wxml -->
+<view wx:if="{{show}}" class="dialog-mask" catchtouchmove="true" bindtap="onMaskTap">
+  <view class="dialog-container animate-fade-in" catchtap="true">
+    <view class="dialog-header" wx:if="{{title}}">
+      <text class="dialog-title">{{title}}</text>
+    </view>
+    <view class="dialog-content">
+      <slot>{{content}}</slot>
+    </view>
+    <view class="dialog-footer">
+      <button wx:if="{{showCancel}}" class="btn cancel" bindtap="onCancel">{{cancelText}}</button>
+      <button class="btn confirm" bindtap="onConfirm">{{confirmText}}</button>
+    </view>
+  </view>
+  <!-- 占位用于吸收点击 -->
+  <view class="dialog-safe-area" catchtap="true"></view>
+</view>
+
+
+
+
+
+

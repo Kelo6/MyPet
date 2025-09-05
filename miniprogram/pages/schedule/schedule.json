@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "健康时间表",
+  "navigationBarBackgroundColor": "#6366f1",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f8fafc",
+  "usingComponents": {
+    "empty-state": "/components/EmptyState/EmptyState",
+    "dialog": "/components/Dialog/Dialog",
+    "tag": "/components/Tag/Tag",
+    "badge": "/components/Badge/Badge"
+  }
+}

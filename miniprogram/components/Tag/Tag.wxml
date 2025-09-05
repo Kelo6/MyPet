@@ -1,0 +1,23 @@
+<!--components/Tag/Tag.wxml-->
+<!-- 标签组件 -->
+<view class="tag {{variant}} {{size}} {{shape}} {{type}}" wx:if="{{!hidden}}" bindtap="onTagTap">
+  <!-- 图标 -->
+  <text class="tag-icon" wx:if="{{icon}}">{{icon}}</text>
+  
+  <!-- 文本内容 -->
+  <text class="tag-text">{{text}}</text>
+  
+  <!-- 关闭按钮 -->
+  <view class="tag-close" wx:if="{{closable}}" bindtap="onCloseTap" catch:tap="true">
+    <text class="close-icon">{{closeIcon}}</text>
+  </view>
+  
+  <!-- 数字徽章 -->
+  <view class="tag-badge" wx:if="{{badge}}">
+    <text class="badge-text">{{badge}}</text>
+  </view>
+</view>
+
+
+
+

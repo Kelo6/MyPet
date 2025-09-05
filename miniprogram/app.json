@@ -1,0 +1,27 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/pet-form/pet-form",
+    "pages/schedule/schedule",
+    "pages/reminders/reminders",
+    "pages/knowledge/knowledge",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#6366F1",
+    "navigationBarTitleText": "宠物健康助手",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F8FAFC"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "获取位置信息用于推荐附近的宠物医院"
+    }
+  },
+  "requiredBackgroundModes": ["background-fetch"],
+  "cloud": true,
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

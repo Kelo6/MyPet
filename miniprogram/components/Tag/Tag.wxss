@@ -1,0 +1,411 @@
+/* components/Tag/Tag.wxss */
+/* 标签组件样式 */
+
+@import "../../styles/globals.wxss";
+
+/* ==================== 基础样式 ==================== */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  border: 1px solid transparent;
+  transition: all var(--transition-fast) var(--ease-out);
+  position: relative;
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+}
+
+.tag:active {
+  transform: scale(0.95);
+}
+
+/* ==================== 尺寸变体 ==================== */
+
+/* 小尺寸 */
+.tag.small {
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-xs);
+  border-radius: var(--radius-xs);
+  min-height: 48rpx;
+}
+
+.tag.small .tag-icon {
+  font-size: var(--font-xs);
+}
+
+.tag.small .tag-close {
+  width: 32rpx;
+  height: 32rpx;
+  margin-left: var(--space-xs);
+}
+
+/* 中等尺寸（默认） */
+.tag.medium {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-sm);
+  border-radius: var(--radius-sm);
+  min-height: 56rpx;
+}
+
+.tag.medium .tag-icon {
+  font-size: var(--font-sm);
+}
+
+.tag.medium .tag-close {
+  width: 36rpx;
+  height: 36rpx;
+  margin-left: var(--space-sm);
+}
+
+/* 大尺寸 */
+.tag.large {
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-md);
+  border-radius: var(--radius-md);
+  min-height: 64rpx;
+}
+
+.tag.large .tag-icon {
+  font-size: var(--font-md);
+}
+
+.tag.large .tag-close {
+  width: 40rpx;
+  height: 40rpx;
+  margin-left: var(--space-md);
+}
+
+/* ==================== 形状变体 ==================== */
+
+/* 圆角矩形（默认） */
+.tag.rounded {
+  /* 使用上面定义的圆角 */
+}
+
+/* 胶囊形 */
+.tag.pill {
+  border-radius: var(--radius-full);
+}
+
+/* 方形 */
+.tag.square {
+  border-radius: var(--radius-xs);
+}
+
+/* ==================== 颜色变体 ==================== */
+
+/* 默认样式 */
+.tag.default {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-normal);
+}
+
+.tag.default:hover {
+  background: var(--bg-secondary);
+}
+
+/* 主色调 */
+.tag.primary {
+  background: var(--primary-color);
+  color: var(--bg-primary);
+}
+
+.tag.primary:hover {
+  background: var(--primary-dark);
+}
+
+/* 强调色 */
+.tag.accent {
+  background: var(--accent-color);
+  color: var(--bg-primary);
+}
+
+.tag.accent:hover {
+  background: var(--accent-dark);
+}
+
+/* 成功状态 */
+.tag.success {
+  background: var(--success-color);
+  color: var(--bg-primary);
+}
+
+.tag.success:hover {
+  background: var(--success-dark);
+}
+
+/* 警告状态 */
+.tag.warning {
+  background: var(--warning-color);
+  color: var(--text-primary);
+}
+
+.tag.warning:hover {
+  background: var(--warning-dark);
+}
+
+/* 错误状态 */
+.tag.error {
+  background: var(--error-color);
+  color: var(--bg-primary);
+}
+
+.tag.error:hover {
+  background: var(--error-dark);
+}
+
+/* 信息状态 */
+.tag.info {
+  background: var(--info-color);
+  color: var(--bg-primary);
+}
+
+.tag.info:hover {
+  background: var(--info-dark);
+}
+
+/* ==================== 类型变体 ==================== */
+
+/* 实心（默认） */
+.tag.filled {
+  /* 使用上面定义的颜色 */
+}
+
+/* 空心 */
+.tag.outlined {
+  background: transparent !important;
+  border-width: 1px;
+}
+
+.tag.outlined.default {
+  color: var(--text-primary);
+  border-color: var(--border-dark);
+}
+
+.tag.outlined.primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.tag.outlined.accent {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.tag.outlined.success {
+  color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.tag.outlined.warning {
+  color: var(--warning-color);
+  border-color: var(--warning-color);
+}
+
+.tag.outlined.error {
+  color: var(--error-color);
+  border-color: var(--error-color);
+}
+
+.tag.outlined.info {
+  color: var(--info-color);
+  border-color: var(--info-color);
+}
+
+/* 浅色背景 */
+.tag.light {
+  border: none;
+}
+
+.tag.light.default {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.tag.light.primary {
+  background: var(--primary-bg);
+  color: var(--primary-color);
+}
+
+.tag.light.accent {
+  background: var(--accent-bg);
+  color: var(--accent-color);
+}
+
+.tag.light.success {
+  background: var(--success-light);
+  color: var(--success-dark);
+}
+
+.tag.light.warning {
+  background: var(--warning-light);
+  color: var(--warning-dark);
+}
+
+.tag.light.error {
+  background: var(--error-light);
+  color: var(--error-dark);
+}
+
+.tag.light.info {
+  background: var(--info-light);
+  color: var(--info-dark);
+}
+
+/* ==================== 子元素样式 ==================== */
+
+.tag-text {
+  flex: 1;
+  line-height: 1;
+}
+
+.tag-icon {
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.tag-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-fast) var(--ease-out);
+  flex-shrink: 0;
+}
+
+.tag-close:active {
+  background: rgba(0, 0, 0, 0.2);
+  transform: scale(0.9);
+}
+
+.close-icon {
+  font-size: 0.8em;
+  line-height: 1;
+}
+
+.tag-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  background: var(--error-color);
+  color: var(--bg-primary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  padding: 0 var(--space-xs);
+  border: 2px solid var(--bg-primary);
+}
+
+.badge-text {
+  line-height: 1;
+}
+
+/* ==================== 宠物专用样式 ==================== */
+
+/* 宠物类型标签 */
+.tag.pet-dog {
+  background: var(--pet-dog-color);
+  color: var(--bg-primary);
+}
+
+.tag.pet-cat {
+  background: var(--pet-cat-color);
+  color: var(--bg-primary);
+}
+
+.tag.pet-bird {
+  background: var(--pet-bird-color);
+  color: var(--text-primary);
+}
+
+.tag.pet-rabbit {
+  background: var(--pet-rabbit-color);
+  color: var(--bg-primary);
+}
+
+.tag.pet-hamster {
+  background: var(--pet-hamster-color);
+  color: var(--bg-primary);
+}
+
+.tag.pet-other {
+  background: var(--pet-other-color);
+  color: var(--bg-primary);
+}
+
+/* 健康状态标签 */
+.tag.health-excellent {
+  background: var(--health-excellent);
+  color: var(--bg-primary);
+}
+
+.tag.health-good {
+  background: var(--health-good);
+  color: var(--bg-primary);
+}
+
+.tag.health-attention {
+  background: var(--health-attention);
+  color: var(--text-primary);
+}
+
+.tag.health-urgent {
+  background: var(--health-urgent);
+  color: var(--bg-primary);
+}
+
+/* ==================== 状态样式 ==================== */
+
+/* 禁用状态 */
+.tag.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 选中状态 */
+.tag.selected {
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+/* ==================== 可访问性增强 ==================== */
+
+.tag:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 1px;
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .tag {
+    border-width: 2px;
+  }
+  
+  .tag.outlined {
+    border-width: 2px;
+  }
+}
+
+/* 减少动画模式 */
+@media (prefers-reduced-motion: reduce) {
+  .tag,
+  .tag-close {
+    transition: none;
+  }
+}
+
+
+
+

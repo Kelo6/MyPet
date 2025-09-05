@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "宠物健康助手",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f8fafc",
+  "navigationBarBackgroundColor": "#6366f1",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "pet-card": "../../components/PetCard/PetCard",
+    "empty-state": "../../components/EmptyState/EmptyState"
+  }
+}

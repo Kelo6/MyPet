@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Miniprogram
+miniprogram_npm/
+miniprogram/**/*.js
+miniprogram/**/*.js.map
+
+# Cloud functions
+cloudfunctions/**/node_modules/
+cloudfunctions/**/*.js
+cloudfunctions/**/*.js.map
+
+# Temp
+.tmp/
+dist/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

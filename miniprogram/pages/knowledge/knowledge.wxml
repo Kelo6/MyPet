@@ -1,0 +1,182 @@
+<!--pages/knowledge/knowledge.wxml-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-section">
+    <view class="search-bar">
+      <view class="search-input-wrapper">
+        <input 
+          class="search-input" 
+          type="text" 
+          placeholder="搜索宠物健康知识"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          confirm-type="search"
+          bindconfirm="onSearch"
+        />
+        <view class="search-icon" bindtap="onSearch">🔍</view>
+      </view>
+      <view wx:if="{{searchKeyword}}" class="search-clear" bindtap="onClearSearch">
+        <text class="clear-text">取消</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类筛选 -->
+  <view class="category-section" wx:if="{{!searchKeyword}}">
+    <scroll-view class="category-scroll" scroll-x="true">
+      <view class="category-chips">
+        <view 
+          class="category-chip {{selectedCategory === 'all' ? 'active' : ''}}"
+          bindtap="onCategorySelect"
+          data-category="all"
+        >
+          <text class="chip-text">全部</text>
+          <view wx:if="{{stats.total > 0}}" class="chip-badge">{{stats.total}}</view>
+        </view>
+        <view 
+          wx:for="{{categories}}" 
+          wx:key="value"
+          class="category-chip {{selectedCategory === item.value ? 'active' : ''}}"
+          bindtap="onCategorySelect"
+          data-category="{{item.value}}"
+        >
+          <text class="chip-icon">{{item.icon}}</text>
+          <text class="chip-text">{{item.label}}</text>
+          <view wx:if="{{item.count > 0}}" class="chip-badge">{{item.count}}</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content-section">
+    <!-- 搜索结果 -->
+    <view wx:if="{{searchKeyword}}" class="search-results">
+      <view class="search-header">
+        <text class="search-title">搜索结果</text>
+        <text class="search-count">找到 {{filteredArticles.length}} 篇文章</text>
+      </view>
+      
+      <!-- 搜索结果列表 -->
+      <view wx:if="{{filteredArticles.length > 0}}" class="search-list">
+        <view 
+          wx:for="{{filteredArticles}}" 
+          wx:key="_id"
+          class="search-item"
+          bindtap="onArticleDetail"
+          data-article="{{item}}"
+        >
+          <view class="search-item-content">
+            <text class="search-item-title">{{item.title}}</text>
+            <text class="search-item-summary">{{getArticleSummary(item.contentMD)}}</text>
+            <view class="search-item-meta">
+              <text class="meta-category">{{getCategoryLabel(item.category)}}</text>
+              <text class="meta-date">{{formatDate(item.updatedAt)}}</text>
+            </view>
+          </view>
+          <view class="search-item-arrow">></view>
+        </view>
+      </view>
+
+      <!-- 搜索无结果 -->
+      <view wx:else class="search-empty">
+        <empty-state
+          icon="🔍"
+          title="未找到相关内容"
+          description="试试其他关键词，或浏览分类内容"
+          action-text="浏览全部"
+          bind:action="onClearSearch"
+        />
+      </view>
+    </view>
+
+    <!-- 分类内容 -->
+    <view wx:else class="category-content">
+      <!-- 推荐文章 -->
+      <view wx:if="{{selectedCategory === 'all'}}" class="featured-section">
+        <view class="section-header">
+          <text class="section-title">🌟 推荐阅读</text>
+        </view>
+        <scroll-view class="featured-scroll" scroll-x="true">
+          <view class="featured-cards">
+            <view 
+              wx:for="{{featuredArticles}}" 
+              wx:key="_id"
+              class="featured-card"
+              bindtap="onArticleDetail"
+              data-article="{{item}}"
+            >
+              <view class="featured-image">
+                <text class="featured-emoji">{{getCategoryIcon(item.category)}}</text>
+              </view>
+              <view class="featured-content">
+                <text class="featured-title">{{item.title}}</text>
+                <text class="featured-summary">{{getArticleSummary(item.contentMD)}}</text>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 文章列表 -->
+      <view class="articles-section">
+        <view wx:if="{{selectedCategory !== 'all'}}" class="section-header">
+          <text class="section-title">{{getCategoryLabel(selectedCategory)}}</text>
+          <text class="section-count">{{filteredArticles.length}} 篇文章</text>
+        </view>
+
+        <!-- 文章列表 -->
+        <view wx:if="{{filteredArticles.length > 0}}" class="articles-list">
+          <view 
+            wx:for="{{filteredArticles}}" 
+            wx:key="_id"
+            class="article-card"
+            bindtap="onArticleDetail"
+            data-article="{{item}}"
+          >
+            <view class="article-icon">
+              <text class="icon-emoji">{{getCategoryIcon(item.category)}}</text>
+            </view>
+            <view class="article-content">
+              <text class="article-title">{{item.title}}</text>
+              <text class="article-summary">{{getArticleSummary(item.contentMD)}}</text>
+              <view class="article-meta">
+                <text class="meta-category">{{getCategoryLabel(item.category)}}</text>
+                <text class="meta-date">{{formatDate(item.updatedAt)}}</text>
+                <text class="meta-reading">{{getReadingTime(item.contentMD)}}分钟阅读</text>
+              </view>
+            </view>
+            <view class="article-arrow">></view>
+          </view>
+        </view>
+
+        <!-- 空状态 -->
+        <view wx:else class="articles-empty">
+          <empty-state
+            icon="📚"
+            title="{{getEmptyTitle()}}"
+            description="{{getEmptyDescription()}}"
+            action-text="浏览其他分类"
+            bind:action="onResetCategory"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <button class="action-button secondary" bindtap="onFeedback">
+      <text class="button-icon">💬</text>
+      <text class="button-text">意见反馈</text>
+    </button>
+    <button class="action-button primary" bindtap="onRequestContent">
+      <text class="button-icon">📝</text>
+      <text class="button-text">内容建议</text>
+    </button>
+  </view>
+</view>
+
+
+
+

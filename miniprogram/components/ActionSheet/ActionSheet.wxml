@@ -1,0 +1,28 @@
+<!-- components/ActionSheet/ActionSheet.wxml -->
+<view wx:if="{{show}}" class="as-mask" catchtouchmove="true" bindtap="onMaskTap">
+  <view class="as-panel animate-fade-in-up" catchtap="true">
+    <view wx:if="{{title}}" class="as-header">
+      <text class="as-title">{{title}}</text>
+    </view>
+    <view class="as-list">
+      <block wx:for="{{items}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+        <view class="as-item {{item.disabled ? 'disabled' : ''}}" data-index="{{index}}" bindtap="onSelect">
+          <view class="as-item-left" wx:if="{{item.icon}}"><text class="as-icon">{{item.icon}}</text></view>
+          <view class="as-item-main">
+            <text class="as-item-text">{{item.text}}</text>
+            <text wx:if="{{item.subText}}" class="as-item-sub">{{item.subText}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+    <view class="as-footer">
+      <button class="as-cancel" bindtap="onCancel">{{cancelText}}</button>
+    </view>
+  </view>
+</view>
+
+
+
+
+
+

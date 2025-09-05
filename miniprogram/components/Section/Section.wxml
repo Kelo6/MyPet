@@ -1,0 +1,42 @@
+<!--components/Section/Section.wxml-->
+<!-- 通用区块组件 -->
+<view class="section {{variant}} {{size}}" wx:if="{{!hidden}}">
+  <!-- 区块头部 -->
+  <view class="section-header" wx:if="{{title || showMore || $slots.header}}">
+    <view class="header-content">
+      <!-- 图标 -->
+      <view class="section-icon" wx:if="{{icon}}">
+        <text class="icon-text">{{icon}}</text>
+      </view>
+      
+      <!-- 标题区域 -->
+      <view class="title-area">
+        <text class="section-title">{{title}}</text>
+        <text class="section-subtitle" wx:if="{{subtitle}}">{{subtitle}}</text>
+      </view>
+      
+      <!-- 自定义头部插槽 -->
+      <slot name="header"></slot>
+    </view>
+    
+    <!-- 更多按钮 -->
+    <view class="more-button" wx:if="{{showMore}}" bindtap="onMoreTap">
+      <text class="more-text">{{moreText}}</text>
+      <text class="more-arrow">{{moreIcon}}</text>
+    </view>
+  </view>
+  
+  <!-- 区块内容 -->
+  <view class="section-content {{contentClass}}">
+    <slot></slot>
+  </view>
+  
+  <!-- 区块底部 -->
+  <view class="section-footer" wx:if="{{$slots.footer}}">
+    <slot name="footer"></slot>
+  </view>
+</view>
+
+
+
+

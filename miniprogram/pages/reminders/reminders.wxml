@@ -1,0 +1,328 @@
+<!--pages/reminders/reminders.wxml-->
+<view class="container">
+  <!-- 头部切换区域 -->
+  <view class="header-section">
+    <view class="view-toggle">
+      <view 
+        class="toggle-item {{currentView === 'calendar' ? 'active' : ''}}"
+        bindtap="onViewChange"
+        data-view="calendar"
+      >
+        <text class="toggle-icon">📅</text>
+        <text class="toggle-text">日历视图</text>
+      </view>
+      <view 
+        class="toggle-item {{currentView === 'list' ? 'active' : ''}}"
+        bindtap="onViewChange"
+        data-view="list"
+      >
+        <text class="toggle-icon">📋</text>
+        <text class="toggle-text">列表视图</text>
+      </view>
+    </view>
+
+    <!-- 筛选选项 -->
+    <view class="filter-section">
+      <scroll-view class="filter-scroll" scroll-x="true">
+        <view class="filter-chips">
+          <view 
+            class="filter-chip {{selectedType === 'all' ? 'active' : ''}}"
+            bindtap="onTypeFilter"
+            data-type="all"
+          >
+            <text class="chip-text">全部</text>
+            <view wx:if="{{stats.total > 0}}" class="chip-badge">{{stats.total}}</view>
+          </view>
+          <view 
+            class="filter-chip {{selectedType === 'vaccine' ? 'active' : ''}}"
+            bindtap="onTypeFilter"
+            data-type="vaccine"
+          >
+            <text class="chip-icon">💉</text>
+            <text class="chip-text">疫苗</text>
+            <view wx:if="{{stats.vaccine > 0}}" class="chip-badge vaccine">{{stats.vaccine}}</view>
+          </view>
+          <view 
+            class="filter-chip {{selectedType === 'deworm' ? 'active' : ''}}"
+            bindtap="onTypeFilter"
+            data-type="deworm"
+          >
+            <text class="chip-icon">💊</text>
+            <text class="chip-text">驱虫</text>
+            <view wx:if="{{stats.deworm > 0}}" class="chip-badge deworm">{{stats.deworm}}</view>
+          </view>
+          <view 
+            class="filter-chip {{selectedStatus === 'pending' ? 'active' : ''}}"
+            bindtap="onStatusFilter"
+            data-status="pending"
+          >
+            <text class="chip-icon">⏰</text>
+            <text class="chip-text">待处理</text>
+            <view wx:if="{{stats.pending > 0}}" class="chip-badge pending">{{stats.pending}}</view>
+          </view>
+          <view 
+            class="filter-chip {{selectedStatus === 'sent' ? 'active' : ''}}"
+            bindtap="onStatusFilter"
+            data-status="sent"
+          >
+            <text class="chip-icon">📤</text>
+            <text class="chip-text">已发送</text>
+            <view wx:if="{{stats.sent > 0}}" class="chip-badge sent">{{stats.sent}}</view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content-section">
+    <!-- 日历视图 -->
+    <view wx:if="{{currentView === 'calendar'}}" class="calendar-view">
+      <!-- 月份导航 -->
+      <view class="calendar-header">
+        <view class="month-nav">
+          <view class="nav-btn" bindtap="onPrevMonth">
+            <text class="nav-icon">‹</text>
+          </view>
+          <view class="month-title">
+            <text class="month-text">{{formatMonth(currentDate)}}</text>
+          </view>
+          <view class="nav-btn" bindtap="onNextMonth">
+            <text class="nav-icon">›</text>
+          </view>
+        </view>
+        <view class="today-btn" bindtap="onToday">
+          <text class="today-text">今天</text>
+        </view>
+      </view>
+
+      <!-- 星期标题 -->
+      <view class="weekdays">
+        <view wx:for="{{weekdays}}" wx:key="*this" class="weekday">
+          <text class="weekday-text">{{item}}</text>
+        </view>
+      </view>
+
+      <!-- 日历网格 -->
+      <view class="calendar-grid">
+        <view 
+          wx:for="{{calendarDays}}" 
+          wx:key="date"
+          class="calendar-day {{item.isCurrentMonth ? 'current-month' : 'other-month'}} {{item.isToday ? 'today' : ''}} {{item.hasReminders ? 'has-reminders' : ''}}"
+          bindtap="onDaySelect"
+          data-date="{{item.date}}"
+        >
+          <text class="day-number">{{item.day}}</text>
+          <view wx:if="{{item.reminders.length > 0}}" class="day-indicators">
+            <view 
+              wx:for="{{item.reminders}}" 
+              wx:key="_id"
+              wx:for-item="reminder"
+              class="reminder-dot {{reminder.type}} {{reminder.status}}"
+            ></view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 选中日期的提醒 -->
+      <view wx:if="{{selectedDateReminders.length > 0}}" class="selected-date-reminders">
+        <view class="selected-date-header">
+          <text class="selected-date-title">{{formatSelectedDate(selectedDate)}} 的提醒</text>
+        </view>
+        <view class="reminder-list">
+          <view 
+            wx:for="{{selectedDateReminders}}" 
+            wx:key="_id"
+            class="reminder-item {{item.status}}"
+            bindtap="onReminderDetail"
+            data-reminder="{{item}}"
+          >
+            <view class="reminder-icon {{item.type}}">
+              <text class="icon-text">{{item.type === 'vaccine' ? '💉' : '💊'}}</text>
+            </view>
+            <view class="reminder-content">
+              <text class="reminder-title">{{getReminderTitle(item)}}</text>
+              <text class="reminder-pet">{{getPetName(item.petId)}}</text>
+            </view>
+            <view class="reminder-status">
+              <text class="status-text">{{getStatusText(item.status)}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 列表视图 -->
+    <view wx:if="{{currentView === 'list'}}" class="list-view">
+      <!-- 空状态 -->
+      <view wx:if="{{filteredReminders.length === 0}}" class="empty-container">
+        <empty-state
+          icon="🔔"
+          title="{{getEmptyTitle()}}"
+          description="{{getEmptyDescription()}}"
+          action-text="生成提醒"
+          bind:action="onGenerateReminders"
+        />
+      </view>
+
+      <!-- 提醒列表 -->
+      <view wx:else class="reminders-list">
+        <!-- 按日期分组 -->
+        <view wx:for="{{groupedReminders}}" wx:key="date" class="date-group">
+          <view class="date-header">
+            <text class="date-title">{{formatGroupDate(item.date)}}</text>
+            <text class="date-count">{{item.reminders.length}}个提醒</text>
+          </view>
+
+          <view class="group-reminders">
+            <view 
+              wx:for="{{item.reminders}}" 
+              wx:key="_id"
+              wx:for-item="reminder"
+              class="reminder-card {{reminder.status}} {{reminder.type}}"
+              bindtap="onReminderDetail"
+              data-reminder="{{reminder}}"
+            >
+              <!-- 状态指示器 -->
+              <view class="status-indicator {{reminder.status}}">
+                <text class="status-dot"></text>
+              </view>
+
+              <!-- 提醒内容 -->
+              <view class="card-content">
+                <view class="card-header">
+                  <view class="reminder-info">
+                    <text class="reminder-title">{{getReminderTitle(reminder)}}</text>
+                    <text class="reminder-subtitle">{{getPetName(reminder.petId)}}</text>
+                  </view>
+                  <view class="type-badge {{reminder.type}}">
+                    <text class="badge-icon">{{reminder.type === 'vaccine' ? '💉' : '💊'}}</text>
+                    <text class="badge-text">{{reminder.type === 'vaccine' ? '疫苗' : '驱虫'}}</text>
+                  </view>
+                </view>
+
+                <view class="card-meta">
+                  <view class="time-info">
+                    <text class="fire-time">{{formatFireTime(reminder.fireAt)}}</text>
+                    <text class="relative-time">{{getRelativeTime(reminder.fireAt)}}</text>
+                  </view>
+                  <view class="status-info">
+                    <text class="status-label {{reminder.status}}">{{getStatusText(reminder.status)}}</text>
+                  </view>
+                </view>
+
+                <!-- 操作按钮 -->
+                <view class="card-actions" wx:if="{{reminder.status === 'pending'}}">
+                  <button 
+                    class="action-btn secondary"
+                    bindtap="onSnoozeReminder"
+                    data-reminder="{{reminder}}"
+                    catch:tap="stopPropagation"
+                  >
+                    稍后提醒
+                  </button>
+                  <button 
+                    class="action-btn primary"
+                    bindtap="onSubscribeMessage"
+                    data-reminder="{{reminder}}"
+                    catch:tap="stopPropagation"
+                  >
+                    订阅提醒
+                  </button>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <button class="action-button secondary" bindtap="requestAllSubscriptions">
+      <text class="button-icon">📢</text>
+      <text class="button-text">批量订阅</text>
+    </button>
+    <button class="action-button primary" bindtap="onAddReminder">
+      <text class="button-icon">➕</text>
+      <text class="button-text">添加提醒</text>
+    </button>
+  </view>
+
+  <!-- 稍后提醒弹窗 -->
+  <view wx:if="{{showSnoozeModal}}" class="modal-overlay" bindtap="hideSnoozeModal">
+    <view class="modal-content" catch:tap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">稍后提醒</text>
+        <view class="modal-close" bindtap="hideSnoozeModal">✕</view>
+      </view>
+      <view class="modal-body">
+        <view class="snooze-options">
+          <view 
+            wx:for="{{snoozeOptions}}" 
+            wx:key="value"
+            class="snooze-option {{selectedSnooze === item.value ? 'active' : ''}}"
+            bindtap="onSnoozeSelect"
+            data-value="{{item.value}}"
+          >
+            <text class="option-icon">{{item.icon}}</text>
+            <text class="option-text">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="modal-actions">
+        <button class="modal-btn secondary" bindtap="hideSnoozeModal">取消</button>
+        <button 
+          class="modal-btn primary" 
+          bindtap="confirmSnooze"
+          disabled="{{!selectedSnooze}}"
+        >
+          确认
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订阅消息授权弹窗 -->
+  <view wx:if="{{showSubscribeModal}}" class="modal-overlay" bindtap="hideSubscribeModal">
+    <view class="modal-content subscribe-modal" catch:tap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">订阅消息提醒</text>
+        <view class="modal-close" bindtap="hideSubscribeModal">✕</view>
+      </view>
+      <view class="modal-body">
+        <view class="subscribe-info">
+          <view class="info-icon">🔔</view>
+          <text class="info-title">开启消息提醒</text>
+          <text class="info-desc">我们将在适当的时候向您发送宠物健康提醒，帮助您不错过重要的疫苗和驱虫时间。</text>
+        </view>
+        
+        <view class="reminder-preview">
+          <text class="preview-title">提醒内容预览：</text>
+          <view class="preview-content">
+            <text class="preview-text">{{previewReminder.title}}</text>
+            <text class="preview-time">提醒时间：{{formatFireTime(previewReminder.fireAt)}}</text>
+          </view>
+        </view>
+
+        <view class="subscribe-tips">
+          <text class="tips-title">温馨提示：</text>
+          <text class="tips-item">• 您可以随时在设置中关闭提醒</text>
+          <text class="tips-item">• 我们不会发送广告或无关信息</text>
+          <text class="tips-item">• 提醒消息完全免费</text>
+        </view>
+      </view>
+      <view class="modal-actions">
+        <button class="modal-btn secondary" bindtap="hideSubscribeModal">暂不订阅</button>
+        <button 
+          class="modal-btn primary" 
+          bindtap="confirmSubscribe"
+          loading="{{subscribing}}"
+        >
+          立即订阅
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

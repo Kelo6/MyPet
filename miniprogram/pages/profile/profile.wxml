@@ -1,0 +1,292 @@
+<!--pages/profile/profile.wxml-->
+<view class="container">
+  <!-- 用户信息区域 -->
+  <view class="user-section">
+    <view class="user-header">
+      <view class="user-avatar-container" bindtap="onAvatarTap">
+        <image 
+          wx:if="{{userInfo.avatarUrl}}" 
+          class="user-avatar" 
+          src="{{userInfo.avatarUrl}}" 
+          mode="aspectFill"
+        />
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-icon">👤</text>
+        </view>
+        <view class="avatar-badge">
+          <text class="badge-icon">📷</text>
+        </view>
+      </view>
+      
+      <view class="user-info">
+        <text wx:if="{{userInfo.nickName}}" class="user-name">{{userInfo.nickName}}</text>
+        <text wx:else class="user-name-placeholder">点击登录</text>
+        <text class="user-id">ID: {{userInfo.userId || '未登录'}}</text>
+      </view>
+      
+      <view class="login-status">
+        <view wx:if="{{isLoggedIn}}" class="status-badge logged-in">
+          <text class="status-text">已登录</text>
+        </view>
+        <view wx:else class="status-badge not-logged-in" bindtap="onLogin">
+          <text class="status-text">去登录</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 统计信息 -->
+    <view class="user-stats">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.pets}}</text>
+        <text class="stat-label">我的宠物</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.schedules}}</text>
+        <text class="stat-label">健康计划</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.reminders}}</text>
+        <text class="stat-label">提醒事项</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{stats.collections}}</text>
+        <text class="stat-label">收藏文章</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <!-- 宠物管理 -->
+    <view class="menu-group">
+      <view class="group-title">
+        <text class="title-icon">🐾</text>
+        <text class="title-text">宠物管理</text>
+      </view>
+      
+      <view class="menu-item" bindtap="onMyPets">
+        <view class="item-icon">🐕</view>
+        <view class="item-content">
+          <text class="item-title">我的宠物</text>
+          <text class="item-desc">管理宠物档案信息</text>
+        </view>
+        <view class="item-badge" wx:if="{{stats.pets > 0}}">{{stats.pets}}</view>
+        <view class="item-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="onHealthRecords">
+        <view class="item-icon">📋</view>
+        <view class="item-content">
+          <text class="item-title">健康记录</text>
+          <text class="item-desc">查看疫苗驱虫记录</text>
+        </view>
+        <view class="item-arrow">></view>
+      </view>
+    </view>
+
+    <!-- 设置选项 -->
+    <view class="menu-group">
+      <view class="group-title">
+        <text class="title-icon">⚙️</text>
+        <text class="title-text">应用设置</text>
+      </view>
+      
+      <view class="menu-item" bindtap="onNotificationSettings">
+        <view class="item-icon">🔔</view>
+        <view class="item-content">
+          <text class="item-title">通知设置</text>
+          <text class="item-desc">管理提醒和推送设置</text>
+        </view>
+        <switch 
+          class="item-switch" 
+          checked="{{settings.notificationEnabled}}"
+          bindchange="onNotificationToggle"
+          catch:tap="stopPropagation"
+        />
+      </view>
+      
+      <view class="menu-item" bindtap="onDataSync">
+        <view class="item-icon">☁️</view>
+        <view class="item-content">
+          <text class="item-title">数据同步</text>
+          <text class="item-desc">{{settings.cloudSync ? '已开启云端同步' : '仅本地存储'}}</text>
+        </view>
+        <switch 
+          class="item-switch" 
+          checked="{{settings.cloudSync}}"
+          bindchange="onCloudSyncToggle"
+          catch:tap="stopPropagation"
+        />
+      </view>
+      
+      <view class="menu-item" bindtap="onThemeSettings">
+        <view class="item-icon">🎨</view>
+        <view class="item-content">
+          <text class="item-title">主题外观</text>
+          <text class="item-desc">{{getThemeText(settings.theme)}}</text>
+        </view>
+        <view class="item-arrow">></view>
+      </view>
+    </view>
+
+    <!-- 其他功能 -->
+    <view class="menu-group">
+      <view class="group-title">
+        <text class="title-icon">📚</text>
+        <text class="title-text">更多功能</text>
+      </view>
+      
+      <view class="menu-item" bindtap="onCollections">
+        <view class="item-icon">❤️</view>
+        <view class="item-content">
+          <text class="item-title">我的收藏</text>
+          <text class="item-desc">收藏的知识文章</text>
+        </view>
+        <view class="item-badge" wx:if="{{stats.collections > 0}}">{{stats.collections}}</view>
+        <view class="item-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="onDataExport">
+        <view class="item-icon">📤</view>
+        <view class="item-content">
+          <text class="item-title">数据导出</text>
+          <text class="item-desc">导出宠物健康数据</text>
+        </view>
+        <view class="item-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="onFeedback">
+        <view class="item-icon">💬</view>
+        <view class="item-content">
+          <text class="item-title">意见反馈</text>
+          <text class="item-desc">帮助我们改进产品</text>
+        </view>
+        <view class="item-arrow">></view>
+      </view>
+    </view>
+
+    <!-- 关于信息 -->
+    <view class="menu-group">
+      <view class="group-title">
+        <text class="title-icon">ℹ️</text>
+        <text class="title-text">关于应用</text>
+      </view>
+      
+      <view class="menu-item" bindtap="onAbout">
+        <view class="item-icon">📱</view>
+        <view class="item-content">
+          <text class="item-title">关于我们</text>
+          <text class="item-desc">版本 {{appVersion}}</text>
+        </view>
+        <view class="item-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="onPrivacyPolicy">
+        <view class="item-icon">🔒</view>
+        <view class="item-content">
+          <text class="item-title">隐私政策</text>
+          <text class="item-desc">了解数据使用说明</text>
+        </view>
+        <view class="item-arrow">></view>
+      </view>
+      
+      <view class="menu-item" bindtap="onUserAgreement">
+        <view class="item-icon">📄</view>
+        <view class="item-content">
+          <text class="item-title">用户协议</text>
+          <text class="item-desc">服务条款和使用规范</text>
+        </view>
+        <view class="item-arrow">></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view wx:if="{{isLoggedIn}}" class="logout-section">
+    <button class="logout-btn" bindtap="onLogout">
+      <text class="logout-text">退出登录</text>
+    </button>
+  </view>
+
+  <!-- 通知设置弹窗 -->
+  <view wx:if="{{showNotificationModal}}" class="modal-overlay" bindtap="hideNotificationModal">
+    <view class="modal-content" catch:tap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">通知设置</text>
+        <view class="modal-close" bindtap="hideNotificationModal">✕</view>
+      </view>
+      <view class="modal-body">
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-title">疫苗提醒</text>
+            <text class="setting-desc">疫苗接种到期前提醒</text>
+          </view>
+          <switch checked="{{notificationSettings.vaccine}}" bindchange="onVaccineNotificationChange" />
+        </view>
+        
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-title">驱虫提醒</text>
+            <text class="setting-desc">驱虫计划到期前提醒</text>
+          </view>
+          <switch checked="{{notificationSettings.deworm}}" bindchange="onDewormNotificationChange" />
+        </view>
+        
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-title">提前天数</text>
+            <text class="setting-desc">提前几天发送提醒</text>
+          </view>
+          <picker 
+            mode="selector" 
+            range="{{reminderDays}}" 
+            value="{{reminderDaysIndex}}"
+            bindchange="onReminderDaysChange"
+          >
+            <view class="picker-display">{{reminderDays[reminderDaysIndex]}}天</view>
+          </picker>
+        </view>
+        
+        <view class="setting-item">
+          <view class="setting-info">
+            <text class="setting-title">静默时段</text>
+            <text class="setting-desc">22:00-08:00 不发送提醒</text>
+          </view>
+          <switch checked="{{notificationSettings.silentHours}}" bindchange="onSilentHoursChange" />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 主题设置弹窗 -->
+  <view wx:if="{{showThemeModal}}" class="modal-overlay" bindtap="hideThemeModal">
+    <view class="modal-content" catch:tap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">主题外观</text>
+        <view class="modal-close" bindtap="hideThemeModal">✕</view>
+      </view>
+      <view class="modal-body">
+        <view class="theme-options">
+          <view 
+            wx:for="{{themeOptions}}" 
+            wx:key="value"
+            class="theme-option {{settings.theme === item.value ? 'active' : ''}}"
+            bindtap="onThemeSelect"
+            data-theme="{{item.value}}"
+          >
+            <view class="theme-preview" style="background: {{item.color}}"></view>
+            <text class="theme-name">{{item.label}}</text>
+            <view wx:if="{{settings.theme === item.value}}" class="theme-check">✓</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+
+
+

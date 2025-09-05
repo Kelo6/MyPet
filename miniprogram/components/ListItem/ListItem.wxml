@@ -1,0 +1,46 @@
+<!--components/ListItem/ListItem.wxml-->
+<view class="list-item {{variant}} {{size}} {{disabled ? 'disabled' : ''}} {{selected ? 'selected' : ''}}" bindtap="onItemTap">
+  <!-- 左侧图标 -->
+  <view wx:if="{{icon}}" class="list-item-icon">
+    <text class="icon">{{icon}}</text>
+  </view>
+  
+  <!-- 头像 -->
+  <image wx:elif="{{avatar}}" class="list-item-avatar" src="{{avatar}}" mode="aspectFill" />
+  
+  <!-- 主要内容 -->
+  <view class="list-item-content">
+    <!-- 标题区域 -->
+    <view class="list-item-title-row">
+      <text class="list-item-title">{{title}}</text>
+      <view wx:if="{{badge}}" class="list-item-badge">
+        <text class="badge-text">{{badge}}</text>
+      </view>
+    </view>
+    
+    <!-- 描述 -->
+    <text wx:if="{{description}}" class="list-item-description">{{description}}</text>
+    
+    <!-- 自定义内容插槽 -->
+    <slot name="content"></slot>
+  </view>
+  
+  <!-- 右侧内容 -->
+  <view class="list-item-right">
+    <!-- 右侧文本 -->
+    <text wx:if="{{rightText}}" class="list-item-right-text">{{rightText}}</text>
+    
+    <!-- 开关 -->
+    <switch wx:if="{{showSwitch}}" checked="{{switchValue}}" bindchange="onSwitchChange" />
+    
+    <!-- 箭头 -->
+    <text wx:if="{{showArrow}}" class="list-item-arrow">{{arrowIcon}}</text>
+    
+    <!-- 自定义右侧内容 -->
+    <slot name="right"></slot>
+  </view>
+</view>
+
+
+
+

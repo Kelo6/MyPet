@@ -1,0 +1,177 @@
+/* components/Badge/Badge.wxss */
+@import "../../styles/theme.wxss";
+
+.badge-container {
+  position: relative;
+  display: inline-block;
+}
+
+.badge-content {
+  position: relative;
+  z-index: 1;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32rpx;
+  height: 32rpx;
+  padding: 0 8rpx;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  border-radius: var(--radius-full);
+  border: 2rpx solid var(--color-white);
+  box-shadow: var(--shadow-sm);
+  z-index: 2;
+}
+
+/* 变体样式 */
+.badge.primary {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.badge.accent {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.badge.success {
+  background-color: var(--color-success);
+  color: var(--color-white);
+}
+
+.badge.warning {
+  background-color: var(--color-warning);
+  color: var(--color-white);
+}
+
+.badge.error {
+  background-color: var(--color-error);
+  color: var(--color-white);
+}
+
+.badge.info {
+  background-color: var(--color-info);
+  color: var(--color-white);
+}
+
+.badge.neutral {
+  background-color: var(--color-text-tertiary);
+  color: var(--color-white);
+}
+
+/* 尺寸变体 */
+.badge.small {
+  min-width: 24rpx;
+  height: 24rpx;
+  padding: 0 6rpx;
+  font-size: 20rpx;
+}
+
+.badge.large {
+  min-width: 40rpx;
+  height: 40rpx;
+  padding: 0 12rpx;
+  font-size: var(--font-size-sm);
+}
+
+/* 形状变体 */
+.badge.square {
+  border-radius: var(--radius-sm);
+}
+
+.badge.rounded {
+  border-radius: var(--radius-md);
+}
+
+/* 圆点样式 */
+.badge.dot {
+  width: 16rpx;
+  height: 16rpx;
+  min-width: 16rpx;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.badge.dot.small {
+  width: 12rpx;
+  height: 12rpx;
+  min-width: 12rpx;
+}
+
+.badge.dot.large {
+  width: 20rpx;
+  height: 20rpx;
+  min-width: 20rpx;
+}
+
+/* 徽章文本 */
+.badge-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200rpx;
+}
+
+/* 位置变体 */
+.badge.top-left {
+  top: 0;
+  left: 0;
+  right: auto;
+  transform: translate(-50%, -50%);
+}
+
+.badge.top-right {
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+.badge.bottom-left {
+  top: auto;
+  bottom: 0;
+  left: 0;
+  right: auto;
+  transform: translate(-50%, 50%);
+}
+
+.badge.bottom-right {
+  top: auto;
+  bottom: 0;
+  right: 0;
+  transform: translate(50%, 50%);
+}
+
+/* 动画效果 */
+.badge {
+  animation: badgeAppear 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes badgeAppear {
+  from {
+    opacity: 0;
+    transform: translate(50%, -50%) scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: translate(50%, -50%) scale(1);
+  }
+}
+
+/* 隐藏状态 */
+.badge.hidden {
+  opacity: 0;
+  transform: translate(50%, -50%) scale(0);
+  transition: all 0.2s ease;
+}
+
+
+
+

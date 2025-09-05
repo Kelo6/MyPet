@@ -1,0 +1,14 @@
+<!-- components/Toast/Toast.wxml -->
+<view wx:if="{{show}}" class="toast-mask" wx:if="{{mask}}" catchtouchmove="true"></view>
+<view wx:if="{{show}}" class="toast {{position}} {{type}} animate-fade-in">
+  <view class="toast-inner">
+    <text wx:if="{{icon}}" class="toast-icon">{{icon}}</text>
+    <text class="toast-text">{{message}}</text>
+  </view>
+</view>
+
+
+
+
+
+

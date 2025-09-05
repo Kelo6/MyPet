@@ -1,0 +1,224 @@
+<!--pages/schedule/schedule.wxml-->
+<view class="container">
+  <!-- 头部筛选区域 -->
+  <view class="header-section">
+    <view class="filter-tabs">
+      <view 
+        class="tab-item {{currentTab === 'all' ? 'active' : ''}}"
+        bindtap="onTabChange"
+        data-tab="all"
+      >
+        <text class="tab-text">全部</text>
+        <view wx:if="{{stats.total > 0}}" class="tab-badge">{{stats.total}}</view>
+      </view>
+      <view 
+        class="tab-item {{currentTab === 'pending' ? 'active' : ''}}"
+        bindtap="onTabChange"
+        data-tab="pending"
+      >
+        <text class="tab-text">待完成</text>
+        <view wx:if="{{stats.pending > 0}}" class="tab-badge pending">{{stats.pending}}</view>
+      </view>
+      <view 
+        class="tab-item {{currentTab === 'completed' ? 'active' : ''}}"
+        bindtap="onTabChange"
+        data-tab="completed"
+      >
+        <text class="tab-text">已完成</text>
+        <view wx:if="{{stats.completed > 0}}" class="tab-badge completed">{{stats.completed}}</view>
+      </view>
+      <view 
+        class="tab-item {{currentTab === 'overdue' ? 'active' : ''}}"
+        bindtap="onTabChange"
+        data-tab="overdue"
+      >
+        <text class="tab-text">已过期</text>
+        <view wx:if="{{stats.overdue > 0}}" class="tab-badge overdue">{{stats.overdue}}</view>
+      </view>
+    </view>
+
+    <!-- 宠物筛选 -->
+    <view class="pet-filter" wx:if="{{pets.length > 1}}">
+      <scroll-view class="pet-scroll" scroll-x="true">
+        <view class="pet-chips">
+          <view 
+            class="pet-chip {{selectedPetId === '' ? 'active' : ''}}"
+            bindtap="onPetFilter"
+            data-pet-id=""
+          >
+            <text class="chip-text">全部宠物</text>
+          </view>
+          <view 
+            wx:for="{{pets}}" 
+            wx:key="_id"
+            class="pet-chip {{selectedPetId === item._id ? 'active' : ''}}"
+            bindtap="onPetFilter"
+            data-pet-id="{{item._id}}"
+          >
+            <image 
+              wx:if="{{item.avatar}}" 
+              class="chip-avatar" 
+              src="{{item.avatar}}" 
+              mode="aspectFill"
+            />
+            <view wx:else class="chip-avatar-placeholder">{{item.name.charAt(0)}}</view>
+            <text class="chip-text">{{item.name}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 时间表内容区域 -->
+  <view class="content-section">
+    <!-- 空状态 -->
+    <view wx:if="{{filteredSchedules.length === 0}}" class="empty-container">
+      <empty-state
+        icon="📅"
+        title="{{getEmptyTitle()}}"
+        description="{{getEmptyDescription()}}"
+        action-text="{{pets.length === 0 ? '添加宠物' : '生成计划'}}"
+        bind:action="onEmptyAction"
+      />
+    </view>
+
+    <!-- 计划列表 -->
+    <view wx:else class="schedule-list">
+      <!-- 按宠物分组显示 -->
+      <view wx:for="{{groupedSchedules}}" wx:key="petId" class="pet-group">
+        <view class="pet-header">
+          <view class="pet-info">
+            <image 
+              wx:if="{{item.pet.avatar}}" 
+              class="pet-avatar" 
+              src="{{item.pet.avatar}}" 
+              mode="aspectFill"
+            />
+            <view wx:else class="pet-avatar-placeholder">{{item.pet.name.charAt(0)}}</view>
+            <view class="pet-details">
+              <text class="pet-name">{{item.pet.name}}</text>
+              <text class="pet-meta">{{getPetMeta(item.pet)}}</text>
+            </view>
+          </view>
+          <view class="pet-stats">
+            <text class="stats-text">{{item.schedules.length}}项计划</text>
+          </view>
+        </view>
+
+        <!-- 计划项列表 -->
+        <view class="schedule-items">
+          <view 
+            wx:for="{{item.schedules}}" 
+            wx:key="_id"
+            wx:for-item="schedule"
+            class="schedule-item {{getScheduleStatus(schedule)}}"
+            bindtap="onScheduleDetail"
+            data-schedule="{{schedule}}"
+          >
+            <!-- 时间轴线条 -->
+            <view class="timeline-line">
+              <view class="timeline-dot {{getScheduleStatus(schedule)}}">
+                <text class="dot-icon">{{getScheduleIcon(schedule)}}</text>
+              </view>
+            </view>
+
+            <!-- 计划内容 -->
+            <view class="schedule-content">
+              <view class="schedule-header">
+                <view class="schedule-title">
+                  <text class="title-text">{{getScheduleTitle(schedule)}}</text>
+                  <view class="type-tag {{schedule.type}}">
+                    {{schedule.type === 'vaccine' ? '疫苗' : '驱虫'}}
+                  </view>
+                </view>
+                <view class="schedule-date">
+                  <text class="date-text">{{formatScheduleDate(schedule)}}</text>
+                  <tag 
+                    text="{{getDateStatusText(schedule)}}" 
+                    variant="{{getDateStatus(schedule) === 'overdue' ? 'error' : (getDateStatus(schedule) === 'today' ? 'warning' : (getDateStatus(schedule) === 'completed' ? 'success' : 'info'))}}"
+                    size="small"
+                    shape="rounded"
+                    type="light"
+                  />
+                </view>
+              </view>
+
+              <view class="schedule-meta">
+                <view wx:if="{{schedule.type === 'vaccine' && schedule.doseNo}}" class="meta-item">
+                  <badge variant="primary" size="small" text="第{{schedule.doseNo}}针" />
+                </view>
+                <text wx:if="{{schedule.type === 'deworm' && schedule.dewormType}}" class="meta-item">
+                  {{getDewormTypeText(schedule.dewormType)}}
+                </text>
+                <text wx:if="{{schedule.actualDate}}" class="meta-item completed">
+                  实际完成：{{formatDate(schedule.actualDate)}}
+                </text>
+              </view>
+
+              <!-- 操作按钮 -->
+              <view class="schedule-actions" wx:if="{{getScheduleStatus(schedule) !== 'completed'}}">
+                <button 
+                  class="action-btn secondary"
+                  bindtap="onMarkComplete"
+                  data-schedule="{{schedule}}"
+                  catch:tap="stopPropagation"
+                >
+                  标记完成
+                </button>
+                <button 
+                  class="action-btn primary"
+                  bindtap="onEditSchedule"
+                  data-schedule="{{schedule}}"
+                  catch:tap="stopPropagation"
+                >
+                  编辑
+                </button>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions" wx:if="{{pets.length > 0}}">
+    <button class="action-button secondary" bindtap="onGeneratePlan">
+      <text class="button-icon">✨</text>
+      <text class="button-text">生成计划</text>
+    </button>
+    <button class="action-button primary" bindtap="onAddSchedule">
+      <text class="button-icon">➕</text>
+      <text class="button-text">添加计划</text>
+    </button>
+  </view>
+
+  <!-- 完成确认弹窗（复用通用 Dialog） -->
+  <dialog 
+    show="{{showCompleteModal}}" 
+    title="标记完成"
+    bind:cancel="hideCompleteModal"
+    bind:confirm="confirmComplete"
+  >
+    <view slot>
+      <view class="complete-info">
+        <text class="complete-title">{{completeSchedule.title}}</text>
+        <text class="complete-date">计划时间：{{formatDate(completeSchedule.plannedDate)}}</text>
+      </view>
+      <view class="form-item">
+        <text class="form-label">实际完成时间</text>
+        <picker mode="date" value="{{actualDate}}" end="{{today}}" bindchange="onActualDateChange">
+          <view class="date-picker">
+            {{actualDate || '选择完成日期'}}
+            <text class="picker-arrow">📅</text>
+          </view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="form-label">备注 (可选)</text>
+        <textarea class="form-textarea" placeholder="记录接种/驱虫的具体信息" value="{{completeNote}}" bindinput="onCompleteNoteChange" maxlength="200" />
+      </view>
+      <view class="dialog-tips">点击“确定”将标记该计划为已完成</view>
+    </view>
+  </dialog>
+</view>

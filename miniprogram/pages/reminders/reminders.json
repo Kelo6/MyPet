@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "健康提醒",
+  "navigationBarBackgroundColor": "#6366f1",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f8fafc",
+  "usingComponents": {
+    "empty-state": "/components/EmptyState/EmptyState"
+  }
+}

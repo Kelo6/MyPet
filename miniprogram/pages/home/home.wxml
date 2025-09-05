@@ -1,0 +1,205 @@
+<!--pages/home/home.wxml-->
+<!-- 导入全局样式 -->
+<view class="home-page">
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container animate-fade-in">
+    <view class="loading-spinner animate-spin"></view>
+    <text class="loading-text">正在为您的毛孩子准备健康档案...</text>
+  </view>
+  
+  <!-- 主要内容 -->
+  <view wx:else class="home-content">
+    <!-- 顶部欢迎区域 -->
+    <view class="welcome-section animate-fade-in">
+      <!-- 背景装饰 -->
+      <view class="welcome-bg">
+        <view class="bg-pattern"></view>
+        <view class="bg-dots"></view>
+      </view>
+      
+      <!-- 用户信息区域 -->
+      <view class="user-info-card">
+        <view wx:if="{{hasUserInfo}}" class="user-info">
+          <image class="avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+          <view class="user-details">
+            <text class="username">{{userInfo.nickName}}</text>
+            <text class="welcome-text">{{getWelcomeText()}}</text>
+          </view>
+          <view class="weather-info">
+            <text class="weather-text">☀️ 今日适合遛宠</text>
+          </view>
+        </view>
+        <button wx:else class="user-info-btn" open-type="getUserInfo" bindgetuserinfo="getUserInfo">
+          <view class="login-content">
+            <text class="login-icon">👋</text>
+            <text class="login-text">点击登录，开始使用</text>
+          </view>
+        </button>
+      </view>
+    </view>
+
+    <!-- 统计卡片 -->
+    <view class="stats-section">
+      <view class="stats-grid">
+        <view class="stat-card primary" bindtap="goToPets">
+          <view class="stat-icon">🐾</view>
+          <text class="stat-number">{{pets.length}}</text>
+          <text class="stat-label">我的宠物</text>
+        </view>
+        <view class="stat-card {{overdueSchedules.length > 0 ? 'danger' : 'normal'}}" bindtap="goToReminders">
+          <view class="stat-icon">⚠️</view>
+          <text class="stat-number">{{overdueSchedules.length}}</text>
+          <text class="stat-label">已逾期</text>
+        </view>
+        <view class="stat-card {{todaySchedules.length > 0 ? 'warning' : 'normal'}}" bindtap="goToSchedule">
+          <view class="stat-icon">📋</view>
+          <text class="stat-number">{{todaySchedules.length}}</text>
+          <text class="stat-label">今日待办</text>
+        </view>
+        <view class="stat-card success" bindtap="goToSchedule">
+          <view class="stat-icon">⏰</view>
+          <text class="stat-number">{{upcomingSchedules.length}}</text>
+          <text class="stat-label">即将到期</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我的宠物 -->
+    <view wx:if="{{pets.length > 0}}" class="pets-section">
+      <view class="section-header">
+        <text class="section-title">我的宠物 ({{pets.length}})</text>
+        <view class="section-action" bindtap="addPet">
+          <text class="action-text">添加</text>
+          <text class="action-icon">+</text>
+        </view>
+      </view>
+      
+      <scroll-view class="pets-scroll" scroll-x show-scrollbar="{{false}}">
+        <view class="pets-list">
+          <pet-card 
+            wx:for="{{pets}}" 
+            wx:key="_id"
+            pet="{{item}}"
+            compact="{{true}}"
+            show-actions="{{false}}"
+            vaccine-status="{{item.vaccineStatus || 'unknown'}}"
+            deworm-status="{{item.dewormStatus || 'unknown'}}"
+            bind:cardtap="onPetCardTap"
+            bind:edit="onPetEdit"
+            bind:detail="onPetDetail"
+          />
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 空状态 - 无宠物 -->
+    <empty-state 
+      wx:else
+      icon="🐾"
+      title="还没有添加宠物"
+      description="添加您的第一只毛孩子，开始科学的健康管理之旅"
+      show-button="{{true}}"
+      button-text="添加宠物"
+      bind:buttontap="addPet"
+    />
+
+    <!-- 30天内待办提醒 -->
+    <view wx:if="{{recentSchedules.length > 0}}" class="schedules-section">
+      <view class="section-header">
+        <text class="section-title">近30天待办</text>
+        <view class="section-action" bindtap="goToSchedule">
+          <text class="action-text">查看全部</text>
+          <text class="action-icon">></text>
+        </view>
+      </view>
+
+      <!-- 逾期提醒 -->
+      <view wx:if="{{overdueSchedules.length > 0}}" class="urgent-alerts">
+        <view class="alert-header">
+          <text class="alert-title">⚠️ 逾期提醒</text>
+          <text class="alert-count">{{overdueSchedules.length}}项</text>
+        </view>
+        <view wx:for="{{overdueSchedules}}" wx:key="_id" wx:for-item="schedule" class="schedule-item urgent">
+          <view class="schedule-info">
+            <text class="schedule-title">{{getPetName(schedule.petId)}} - {{getScheduleTitle(schedule)}}</text>
+            <text class="schedule-date overdue">逾期 {{getOverdueDays(schedule.plannedDate)}} 天</text>
+          </view>
+          <view class="schedule-actions">
+            <button class="action-btn complete" data-id="{{schedule._id}}" bindtap="completeSchedule" catch:tap="true">
+              完成
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <!-- 今日待办 -->
+      <view wx:if="{{todaySchedules.length > 0}}" class="today-tasks">
+        <view class="tasks-header">
+          <text class="tasks-title">📋 今日待办</text>
+          <text class="tasks-count">{{todaySchedules.length}}项</text>
+        </view>
+        <view wx:for="{{todaySchedules}}" wx:key="_id" wx:for-item="schedule" class="schedule-item today">
+          <view class="schedule-info">
+            <text class="schedule-title">{{getPetName(schedule.petId)}} - {{getScheduleTitle(schedule)}}</text>
+            <text class="schedule-date today-date">今天</text>
+          </view>
+          <view class="schedule-actions">
+            <button class="action-btn complete" data-id="{{schedule._id}}" bindtap="completeSchedule" catch:tap="true">
+              完成
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <!-- 即将到期 -->
+      <view wx:if="{{upcomingSchedules.length > 0}}" class="upcoming-tasks">
+        <view class="tasks-header">
+          <text class="tasks-title">⏰ 即将到期</text>
+          <text class="tasks-count">{{upcomingSchedules.length}}项</text>
+        </view>
+        <view wx:for="{{upcomingSchedules.slice(0, 5)}}" wx:key="_id" wx:for-item="schedule" class="schedule-item upcoming">
+          <view class="schedule-info">
+            <text class="schedule-title">{{getPetName(schedule.petId)}} - {{getScheduleTitle(schedule)}}</text>
+            <text class="schedule-date upcoming-date">{{getRelativeDate(schedule.plannedDate)}}</text>
+          </view>
+          <view class="schedule-type">
+            <text class="type-badge {{schedule.type}}">{{getTypeText(schedule.type)}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 - 无待办 -->
+    <view wx:elif="{{pets.length > 0}}" class="no-schedules">
+      <empty-state 
+        icon="✅"
+        title="暂无待办事项"
+        description="您的宠物健康管理一切正常！"
+        show-button="{{true}}"
+        button-text="去完善计划"
+        bind:buttontap="goToSchedule"
+      />
+    </view>
+
+    <!-- 快捷操作 -->
+    <view class="quick-actions">
+      <view class="action-grid">
+        <view class="action-item primary" bindtap="addPet">
+          <view class="action-icon">🐕</view>
+          <text class="action-title">添加宠物</text>
+          <text class="action-desc">建立宠物档案</text>
+        </view>
+        <view class="action-item secondary" bindtap="goToSchedule">
+          <view class="action-icon">📅</view>
+          <text class="action-title">完善计划</text>
+          <text class="action-desc">设置疫苗驱虫</text>
+        </view>
+        <view class="action-item tertiary" bindtap="goToKnowledge">
+          <view class="action-icon">📚</view>
+          <text class="action-title">学习知识</text>
+          <text class="action-desc">宠物护理百科</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

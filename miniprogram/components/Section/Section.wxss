@@ -1,0 +1,344 @@
+/* components/Section/Section.wxss */
+/* 通用区块组件样式 */
+
+@import "../../styles/globals.wxss";
+
+/* ==================== 基础样式 ==================== */
+
+.section {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-lg);
+  transition: all var(--transition-normal) var(--ease-in-out);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ==================== 变体样式 ==================== */
+
+/* 默认变体 */
+.section.default {
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 卡片变体 */
+.section.card {
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+}
+
+.section.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* 扁平变体 */
+.section.flat {
+  background: var(--bg-secondary);
+  border: none;
+  box-shadow: none;
+}
+
+/* 强调变体 */
+.section.emphasis {
+  background: linear-gradient(135deg, var(--primary-bg) 0%, var(--accent-bg) 100%);
+  border: 1px solid var(--primary-color);
+  position: relative;
+}
+
+.section.emphasis::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
+/* 透明变体 */
+.section.transparent {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* ==================== 尺寸变体 ==================== */
+
+/* 小尺寸 */
+.section.small {
+  padding: var(--space-md);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-md);
+}
+
+.section.small .section-title {
+  font-size: var(--font-md);
+}
+
+/* 中等尺寸（默认） */
+.section.medium {
+  padding: var(--space-lg);
+}
+
+/* 大尺寸 */
+.section.large {
+  padding: var(--space-xl);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.section.large .section-title {
+  font-size: var(--font-2xl);
+}
+
+/* ==================== 头部样式 ==================== */
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex: 1;
+}
+
+.section-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background: var(--primary-bg);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon-text {
+  font-size: var(--font-xl);
+}
+
+.title-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.section-title {
+  font-size: var(--font-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.section-subtitle {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* ==================== 更多按钮 ==================== */
+
+.more-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast) var(--ease-out);
+  cursor: pointer;
+  border: 1px solid var(--border-light);
+}
+
+.more-button:active {
+  background: var(--bg-tertiary);
+  transform: scale(0.98);
+}
+
+.more-text {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.more-arrow {
+  font-size: var(--font-sm);
+  color: var(--text-tertiary);
+  transition: transform var(--transition-fast) var(--ease-out);
+}
+
+.more-button:active .more-arrow {
+  transform: translateX(2px);
+}
+
+/* ==================== 内容区域 ==================== */
+
+.section-content {
+  position: relative;
+}
+
+/* 内容变体类 */
+.section-content.grid {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.section-content.flex {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.section-content.flex-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.section-content.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* ==================== 底部区域 ==================== */
+
+.section-footer {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-light);
+}
+
+/* ==================== 特殊状态 ==================== */
+
+/* 加载状态 */
+.section.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.section.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* 错误状态 */
+.section.error {
+  border-color: var(--error-color);
+  background: var(--error-light);
+}
+
+.section.error .section-title {
+  color: var(--error-dark);
+}
+
+/* 成功状态 */
+.section.success {
+  border-color: var(--success-color);
+  background: var(--success-light);
+}
+
+.section.success .section-title {
+  color: var(--success-dark);
+}
+
+/* ==================== 响应式设计 ==================== */
+
+/* 小屏幕适配 */
+@media screen and (max-width: 480px) {
+  .section {
+    margin-bottom: var(--space-md);
+  }
+  
+  .section.medium {
+    padding: var(--space-md);
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+  
+  .more-button {
+    align-self: flex-end;
+  }
+  
+  .header-content {
+    width: 100%;
+  }
+}
+
+/* ==================== 可访问性增强 ==================== */
+
+.section:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.more-button:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 1px;
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+  .section {
+    border-width: 2px;
+  }
+  
+  .section-header {
+    border-bottom-width: 2px;
+  }
+  
+  .more-button {
+    border-width: 2px;
+  }
+}
+
+/* 减少动画模式 */
+@media (prefers-reduced-motion: reduce) {
+  .section,
+  .more-button,
+  .more-arrow {
+    transition: none;
+  }
+  
+  .section.loading::after {
+    animation: none;
+  }
+}
+
+
+
+

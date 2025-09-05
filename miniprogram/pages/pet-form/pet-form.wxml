@@ -1,0 +1,292 @@
+<!--pages/pet-form/pet-form.wxml-->
+<view class="container">
+  <form bindsubmit="onSubmit" bindreset="onReset">
+    <!-- 头像区域 -->
+    <view class="avatar-section">
+      <view class="avatar-container" bindtap="chooseAvatar">
+        <image 
+          class="avatar" 
+          src="{{formData.avatar || '/assets/images/default-pet.png'}}" 
+          mode="aspectFill"
+        />
+        <view class="avatar-overlay">
+          <view class="camera-icon">📷</view>
+          <text class="avatar-text">{{formData.avatar ? '更换头像' : '添加头像'}}</text>
+        </view>
+      </view>
+      <view class="avatar-tips">点击上传宠物照片，让档案更生动</view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-icon">🐾</view>
+        <view class="section-title">基本信息</view>
+        <view class="section-required">必填项目</view>
+      </view>
+      
+      <!-- 宠物名称 -->
+      <view class="form-item {{errors.name ? 'error' : ''}}">
+        <view class="label">
+          <text class="label-text">宠物名称</text>
+          <text class="required">*</text>
+        </view>
+        <view class="input-wrapper">
+          <input 
+            class="input" 
+            type="text" 
+            placeholder="给你的毛孩子起个好听的名字"
+            value="{{formData.name}}"
+            bindinput="onInputChange"
+            data-field="name"
+            maxlength="20"
+          />
+          <view class="input-count">{{formData.name.length}}/20</view>
+        </view>
+        <view wx:if="{{errors.name}}" class="error-text">{{errors.name}}</view>
+      </view>
+
+      <!-- 宠物类型 -->
+      <view class="form-item {{errors.species ? 'error' : ''}}">
+        <view class="label">
+          <text class="label-text">宠物类型</text>
+          <text class="required">*</text>
+        </view>
+        <picker 
+          bindchange="onSpeciesChange" 
+          value="{{speciesIndex}}" 
+          range="{{speciesOptions}}"
+          range-key="label"
+        >
+          <view class="picker {{!formData.species ? 'placeholder' : ''}}">
+            <text class="picker-text">{{speciesLabel}}</text>
+            <text class="picker-arrow">></text>
+          </view>
+        </picker>
+        <view wx:if="{{errors.species}}" class="error-text">{{errors.species}}</view>
+      </view>
+
+      <!-- 品种 -->
+      <view class="form-item">
+        <view class="label">
+          <text class="label-text">品种</text>
+          <text class="optional">选填</text>
+        </view>
+        <view class="input-wrapper">
+          <input 
+            class="input" 
+            type="text" 
+            placeholder="{{getBreedPlaceholder(formData.species)}}"
+            value="{{formData.breed}}"
+            bindinput="onInputChange"
+            data-field="breed"
+            maxlength="30"
+          />
+        </view>
+      </view>
+
+      <!-- 性别 -->
+      <view class="form-item">
+        <view class="label">
+          <text class="label-text">性别</text>
+        </view>
+        <view class="radio-group">
+          <view 
+            class="radio-item {{formData.gender === 'male' ? 'active' : ''}}"
+            bindtap="onGenderChange"
+            data-value="male"
+          >
+            <view class="radio-icon">♂</view>
+            <text class="radio-text">男孩</text>
+          </view>
+          <view 
+            class="radio-item {{formData.gender === 'female' ? 'active' : ''}}"
+            bindtap="onGenderChange"
+            data-value="female"
+          >
+            <view class="radio-icon">♀</view>
+            <text class="radio-text">女孩</text>
+          </view>
+          <view 
+            class="radio-item {{formData.gender === 'unknown' ? 'active' : ''}}"
+            bindtap="onGenderChange"
+            data-value="unknown"
+          >
+            <view class="radio-icon">?</view>
+            <text class="radio-text">未知</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 生日 -->
+      <view class="form-item">
+        <view class="label">
+          <text class="label-text">生日</text>
+        </view>
+        <picker 
+          mode="date" 
+          value="{{formData.birthday}}" 
+          end="{{today}}"
+          bindchange="onBirthdayChange"
+        >
+          <view class="picker {{!formData.birthday ? 'placeholder' : ''}}">
+            <text class="picker-text">
+              {{formData.birthday ? formatBirthday(formData.birthday) : '选择生日（用于年龄计算）'}}
+            </text>
+            <text class="picker-arrow">📅</text>
+          </view>
+        </picker>
+        <view wx:if="{{formData.birthday}}" class="field-hint">
+          当前年龄：{{currentAge || '请先选择生日'}}
+        </view>
+      </view>
+
+      <!-- 体重 -->
+      <view class="form-item">
+        <view class="label">
+          <text class="label-text">体重</text>
+        </view>
+        <view class="input-with-unit">
+          <input 
+            class="input" 
+            type="digit" 
+            placeholder="输入体重"
+            value="{{formData.weightKg}}"
+            bindinput="onInputChange"
+            data-field="weightKg"
+          />
+          <text class="unit">kg</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 健康状态 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-icon">💊</view>
+        <view class="section-title">健康状态</view>
+        <view class="section-desc">帮助制定健康计划</view>
+      </view>
+
+      <!-- 绝育状态 -->
+      <view class="form-item">
+        <view class="switch-item">
+          <view class="switch-info">
+            <text class="switch-label">绝育状态</text>
+            <text class="switch-desc">影响疫苗和健康计划</text>
+          </view>
+          <switch 
+            class="switch" 
+            checked="{{formData.sterilized}}" 
+            bindchange="onSterilizedChange"
+          />
+        </view>
+        <view class="switch-status">
+          <text class="status-text {{formData.sterilized ? 'sterilized' : 'not-sterilized'}}">
+            {{formData.sterilized ? '✅ 已绝育' : '❌ 未绝育'}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 其他信息 -->
+    <view class="form-section">
+      <view class="section-header">
+        <view class="section-icon">📝</view>
+        <view class="section-title">其他信息</view>
+        <view class="section-desc">选填项目</view>
+      </view>
+
+      <!-- 芯片号 -->
+      <view class="form-item">
+        <view class="label">
+          <text class="label-text">芯片号</text>
+          <view class="label-tip" bindtap="showChipTip">ℹ️</view>
+        </view>
+        <view class="input-wrapper">
+          <input 
+            class="input" 
+            type="text" 
+            placeholder="15位芯片编号"
+            value="{{formData.microchipId}}"
+            bindinput="onInputChange"
+            data-field="microchipId"
+            maxlength="15"
+          />
+        </view>
+      </view>
+
+      <!-- 备注 -->
+      <view class="form-item">
+        <view class="label">
+          <text class="label-text">备注</text>
+        </view>
+        <view class="textarea-wrapper">
+          <textarea 
+            class="textarea" 
+            placeholder="记录其他重要信息，如过敏史、特殊习惯等"
+            value="{{formData.note}}"
+            bindinput="onInputChange"
+            data-field="note"
+            maxlength="200"
+          />
+          <view class="textarea-count">{{noteCount}}/200</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="form-actions">
+      <button 
+        class="btn-secondary" 
+        type="reset"
+        disabled="{{submitting}}"
+      >
+        重置
+      </button>
+      <button 
+        class="btn-primary" 
+        type="submit" 
+        loading="{{submitting}}"
+        disabled="{{submitting || !isFormValid}}"
+      >
+        {{isEditing ? '更新宠物信息' : '保存宠物档案'}}
+      </button>
+    </view>
+
+    <!-- 删除按钮（编辑模式） -->
+    <view wx:if="{{isEditing}}" class="danger-zone">
+      <button 
+        class="btn-danger" 
+        bindtap="onDelete"
+        disabled="{{submitting}}"
+      >
+        删除这只宠物
+      </button>
+      <view class="danger-hint">删除后无法恢复，请谨慎操作</view>
+    </view>
+  </form>
+
+  <!-- 芯片号说明弹窗 -->
+  <view wx:if="{{showChipModal}}" class="modal-overlay" bindtap="hideChipTip">
+    <view class="modal-content" catch:tap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">关于芯片号</text>
+        <view class="modal-close" bindtap="hideChipTip">✕</view>
+      </view>
+      <view class="modal-body">
+        <text class="modal-text">
+          宠物芯片是植入皮下的身份识别装置，通常为15位数字编号。
+          
+          芯片的作用：
+          • 永久身份标识
+          • 走失后便于找回
+          • 医疗记录关联
+          • 出入境证明
+          
+          如果您的宠物没有芯片，建议咨询兽医进行植入。
+        </text>
+      </view>
+    </view>
+  </view>
+</view>

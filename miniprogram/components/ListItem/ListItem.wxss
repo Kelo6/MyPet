@@ -1,0 +1,189 @@
+/* components/ListItem/ListItem.wxss */
+@import "../../styles/theme.wxss";
+
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-white);
+  border-bottom: 1rpx solid var(--color-border-light);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.list-item:active {
+  background-color: var(--color-bg-hover);
+  transform: scale(0.98);
+}
+
+.list-item.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.list-item.selected {
+  background-color: var(--color-primary-light);
+  border-left: 4rpx solid var(--color-primary);
+}
+
+/* 变体样式 */
+.list-item.card {
+  margin: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  border: 1rpx solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.list-item.flat {
+  border-bottom: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* 尺寸变体 */
+.list-item.small {
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.list-item.large {
+  padding: var(--spacing-lg) var(--spacing-lg);
+}
+
+/* 左侧图标 */
+.list-item-icon {
+  margin-right: var(--spacing-md);
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-secondary);
+}
+
+.list-item-icon .icon {
+  font-size: 32rpx;
+}
+
+/* 头像 */
+.list-item-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  margin-right: var(--spacing-md);
+  background-color: var(--color-bg-secondary);
+}
+
+/* 主要内容 */
+.list-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.list-item-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xs);
+}
+
+.list-item-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-item-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-top: var(--spacing-xs);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 徽章 */
+.list-item-badge {
+  margin-left: var(--spacing-sm);
+  padding: 2rpx 8rpx;
+  background-color: var(--color-error);
+  border-radius: var(--radius-full);
+  min-width: 32rpx;
+  height: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-white);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+}
+
+/* 右侧内容 */
+.list-item-right {
+  display: flex;
+  align-items: center;
+  margin-left: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.list-item-right-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  margin-right: var(--spacing-sm);
+}
+
+.list-item-arrow {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  transition: transform 0.2s ease;
+}
+
+.list-item.selected .list-item-arrow {
+  transform: rotate(90deg);
+}
+
+/* 开关样式 */
+.list-item switch {
+  transform: scale(0.8);
+}
+
+/* 动画效果 */
+.list-item {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式适配 */
+@media screen and (max-width: 375px) {
+  .list-item {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+  
+  .list-item-title {
+    font-size: var(--font-size-sm);
+  }
+  
+  .list-item-description {
+    font-size: var(--font-size-xs);
+  }
+}

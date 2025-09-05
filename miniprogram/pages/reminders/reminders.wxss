@@ -1,0 +1,982 @@
+/* pages/reminders/reminders.wxss */
+
+.container {
+  background: #f8fafc;
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
+
+/* 头部区域 */
+.header-section {
+  background: white;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* 视图切换 */
+.view-toggle {
+  display: flex;
+  padding: 24rpx 32rpx 0;
+  border-bottom: 2rpx solid #f1f5f9;
+}
+
+.toggle-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24rpx 16rpx;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.toggle-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48rpx;
+  height: 6rpx;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 3rpx;
+}
+
+.toggle-icon {
+  font-size: 32rpx;
+  margin-bottom: 8rpx;
+  color: #64748b;
+}
+
+.toggle-item.active .toggle-icon {
+  color: #6366f1;
+}
+
+.toggle-text {
+  font-size: 28rpx;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.toggle-item.active .toggle-text {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+/* 筛选区域 */
+.filter-section {
+  padding: 24rpx 0;
+}
+
+.filter-scroll {
+  width: 100%;
+}
+
+.filter-chips {
+  display: flex;
+  padding: 0 32rpx;
+  gap: 16rpx;
+}
+
+.filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx 20rpx;
+  background: #f8fafc;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 32rpx;
+  white-space: nowrap;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.filter-chip.active {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1;
+}
+
+.chip-icon {
+  font-size: 24rpx;
+}
+
+.chip-text {
+  font-size: 28rpx;
+  color: #374151;
+  font-weight: 500;
+}
+
+.filter-chip.active .chip-text {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.chip-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  background: #6366f1;
+  color: white;
+  font-size: 20rpx;
+  font-weight: 600;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8rpx;
+}
+
+.chip-badge.vaccine {
+  background: #8b5cf6;
+}
+
+.chip-badge.deworm {
+  background: #f59e0b;
+}
+
+.chip-badge.pending {
+  background: #ef4444;
+}
+
+.chip-badge.sent {
+  background: #22c55e;
+}
+
+/* 内容区域 */
+.content-section {
+  flex: 1;
+}
+
+/* 日历视图 */
+.calendar-view {
+  padding: 32rpx;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+}
+
+.nav-btn {
+  width: 64rpx;
+  height: 64rpx;
+  background: white;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+  background: #f8fafc;
+}
+
+.nav-icon {
+  font-size: 36rpx;
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.month-title {
+  min-width: 200rpx;
+  text-align: center;
+}
+
+.month-text {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.today-btn {
+  padding: 16rpx 24rpx;
+  background: rgba(99, 102, 241, 0.1);
+  border: 2rpx solid #6366f1;
+  border-radius: 20rpx;
+  transition: all 0.3s ease;
+}
+
+.today-btn:active {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.today-text {
+  font-size: 28rpx;
+  color: #6366f1;
+  font-weight: 600;
+}
+
+/* 星期标题 */
+.weekdays {
+  display: flex;
+  margin-bottom: 16rpx;
+}
+
+.weekday {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+}
+
+.weekday-text {
+  font-size: 26rpx;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* 日历网格 */
+.calendar-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.calendar-day {
+  width: calc((100% - 48rpx) / 7);
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 12rpx;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.calendar-day.other-month {
+  opacity: 0.3;
+}
+
+.calendar-day.today {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+}
+
+.calendar-day.has-reminders {
+  border: 2rpx solid #6366f1;
+}
+
+.calendar-day:active {
+  transform: scale(0.95);
+}
+
+.day-number {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 4rpx;
+}
+
+.calendar-day.today .day-number {
+  color: white;
+}
+
+.day-indicators {
+  display: flex;
+  gap: 4rpx;
+}
+
+.reminder-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 6rpx;
+}
+
+.reminder-dot.vaccine {
+  background: #8b5cf6;
+}
+
+.reminder-dot.deworm {
+  background: #f59e0b;
+}
+
+.reminder-dot.pending {
+  opacity: 1;
+}
+
+.reminder-dot.sent {
+  opacity: 0.5;
+}
+
+/* 选中日期的提醒 */
+.selected-date-reminders {
+  margin-top: 32rpx;
+  background: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.selected-date-header {
+  padding: 24rpx 32rpx;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+}
+
+.selected-date-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: white;
+}
+
+.reminder-list {
+  padding: 24rpx;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #f1f5f9;
+  transition: all 0.3s ease;
+}
+
+.reminder-item:last-child {
+  border-bottom: none;
+}
+
+.reminder-item:active {
+  background: #f8fafc;
+  transform: scale(0.98);
+}
+
+.reminder-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.reminder-icon.vaccine {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.reminder-icon.deworm {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.reminder-content {
+  flex: 1;
+}
+
+.reminder-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8rpx;
+}
+
+.reminder-pet {
+  font-size: 26rpx;
+  color: #64748b;
+}
+
+.reminder-status {
+  text-align: right;
+}
+
+.status-text {
+  font-size: 24rpx;
+  font-weight: 500;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+/* 列表视图 */
+.list-view {
+  padding: 32rpx;
+}
+
+.empty-container {
+  padding: 120rpx 0;
+}
+
+.reminders-list {
+  /* 列表容器 */
+}
+
+.date-group {
+  margin-bottom: 32rpx;
+}
+
+.date-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+  padding: 0 8rpx;
+}
+
+.date-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.date-count {
+  font-size: 26rpx;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.group-reminders {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.reminder-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.reminder-card:active {
+  transform: scale(0.98);
+}
+
+.reminder-card.pending {
+  border-left: 8rpx solid #f59e0b;
+}
+
+.reminder-card.sent {
+  border-left: 8rpx solid #22c55e;
+}
+
+.reminder-card.done {
+  border-left: 8rpx solid #6b7280;
+  opacity: 0.7;
+}
+
+.status-indicator {
+  position: absolute;
+  top: 24rpx;
+  right: 24rpx;
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-indicator.pending {
+  background: #fef3c7;
+}
+
+.status-indicator.sent {
+  background: #dcfce7;
+}
+
+.status-indicator.done {
+  background: #f3f4f6;
+}
+
+.status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 6rpx;
+}
+
+.status-indicator.pending .status-dot {
+  background: #f59e0b;
+}
+
+.status-indicator.sent .status-dot {
+  background: #22c55e;
+}
+
+.status-indicator.done .status-dot {
+  background: #6b7280;
+}
+
+.card-content {
+  padding-right: 48rpx;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.reminder-info {
+  flex: 1;
+}
+
+.reminder-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8rpx;
+}
+
+.reminder-subtitle {
+  font-size: 28rpx;
+  color: #64748b;
+}
+
+.type-badge {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 16rpx;
+  border-radius: 16rpx;
+  margin-left: 16rpx;
+}
+
+.type-badge.vaccine {
+  background: rgba(139, 92, 246, 0.1);
+  color: #8b5cf6;
+}
+
+.type-badge.deworm {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.badge-icon {
+  font-size: 20rpx;
+}
+
+.badge-text {
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.time-info {
+  flex: 1;
+}
+
+.fire-time {
+  display: block;
+  font-size: 28rpx;
+  color: #374151;
+  font-weight: 500;
+  margin-bottom: 4rpx;
+}
+
+.relative-time {
+  font-size: 24rpx;
+  color: #64748b;
+}
+
+.status-info {
+  text-align: right;
+}
+
+.status-label {
+  font-size: 24rpx;
+  font-weight: 600;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.status-label.pending {
+  color: #f59e0b;
+  background: #fef3c7;
+}
+
+.status-label.sent {
+  color: #22c55e;
+  background: #dcfce7;
+}
+
+.status-label.done {
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.card-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-btn {
+  flex: 1;
+  height: 64rpx;
+  border-radius: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.action-btn.secondary {
+  background: #f8fafc;
+  color: #64748b;
+  border: 2rpx solid #e5e7eb;
+}
+
+.action-btn.secondary:active {
+  background: #f1f5f9;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+}
+
+.action-btn.primary:active {
+  transform: scale(0.98);
+}
+
+/* 底部操作栏 */
+.bottom-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 24rpx 32rpx;
+  border-top: 2rpx solid #f1f5f9;
+  display: flex;
+  gap: 24rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.action-button {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.action-button.secondary {
+  background: #f8fafc;
+  color: #64748b;
+  border: 2rpx solid #e5e7eb;
+}
+
+.action-button.secondary:active {
+  background: #f1f5f9;
+  transform: scale(0.98);
+}
+
+.action-button.primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(99, 102, 241, 0.3);
+}
+
+.action-button.primary:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(99, 102, 241, 0.3);
+}
+
+.button-icon {
+  font-size: 32rpx;
+}
+
+.button-text {
+  font-size: 32rpx;
+}
+
+/* 模态框 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  width: 640rpx;
+  max-height: 80vh;
+  background: white;
+  border-radius: 24rpx;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx;
+  border-bottom: 2rpx solid #f1f5f9;
+}
+
+.modal-title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.modal-close {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 24rpx;
+  font-size: 28rpx;
+  color: #64748b;
+}
+
+.modal-body {
+  padding: 32rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 16rpx;
+  padding: 24rpx 32rpx 32rpx;
+}
+
+.modal-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.modal-btn.secondary {
+  background: #f8fafc;
+  color: #64748b;
+  border: 2rpx solid #e5e7eb;
+}
+
+.modal-btn.secondary:active {
+  background: #f1f5f9;
+}
+
+.modal-btn.primary {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+}
+
+.modal-btn.primary:active {
+  transform: scale(0.98);
+}
+
+.modal-btn:disabled {
+  opacity: 0.5;
+  transform: none;
+}
+
+/* 稍后提醒选项 */
+.snooze-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+}
+
+.snooze-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32rpx 16rpx;
+  background: #f8fafc;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.snooze-option.active {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1;
+}
+
+.option-icon {
+  font-size: 36rpx;
+  margin-bottom: 12rpx;
+}
+
+.option-text {
+  font-size: 28rpx;
+  color: #374151;
+  font-weight: 500;
+}
+
+.snooze-option.active .option-text {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+/* 订阅模态框 */
+.subscribe-modal {
+  width: 680rpx;
+}
+
+.subscribe-info {
+  text-align: center;
+  margin-bottom: 32rpx;
+}
+
+.info-icon {
+  font-size: 80rpx;
+  margin-bottom: 16rpx;
+}
+
+.info-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 16rpx;
+}
+
+.info-desc {
+  font-size: 30rpx;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.reminder-preview {
+  background: #f8fafc;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  margin-bottom: 32rpx;
+}
+
+.preview-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16rpx;
+}
+
+.preview-content {
+  background: white;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  border-left: 6rpx solid #6366f1;
+}
+
+.preview-text {
+  display: block;
+  font-size: 30rpx;
+  color: #1e293b;
+  font-weight: 500;
+  margin-bottom: 8rpx;
+}
+
+.preview-time {
+  font-size: 26rpx;
+  color: #64748b;
+}
+
+.subscribe-tips {
+  border-top: 2rpx solid #f1f5f9;
+  padding-top: 24rpx;
+}
+
+.tips-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16rpx;
+}
+
+.tips-item {
+  display: block;
+  font-size: 26rpx;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 8rpx;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100rpx);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 375px) {
+  .calendar-view,
+  .list-view {
+    padding: 24rpx;
+  }
+  
+  .reminder-card {
+    padding: 24rpx;
+  }
+  
+  .modal-content {
+    width: calc(100vw - 64rpx);
+    margin: 0 32rpx;
+  }
+  
+  .subscribe-modal {
+    width: calc(100vw - 48rpx);
+    margin: 0 24rpx;
+  }
+}
+
+
+
+

@@ -1,0 +1,20 @@
+<!--components/Badge/Badge.wxml-->
+<view class="badge-container">
+  <!-- 主要内容 -->
+  <view class="badge-content">
+    <slot></slot>
+  </view>
+  
+  <!-- 徽章 -->
+  <view 
+    wx:if="{{showBadge}}" 
+    class="badge {{variant}} {{size}} {{shape}} {{dot ? 'dot' : ''}}"
+    style="{{customStyle}}"
+  >
+    <text wx:if="{{!dot && text}}" class="badge-text">{{displayText}}</text>
+  </view>
+</view>
+
+
+
+
